@@ -1,7 +1,8 @@
 // Copyright (c) 2014-2017 The Dash Core developers
+// Copyright (c) 2017-2018 The GoByte Core developers
 // Distributed under the MIT software license, see the accompanying
-#ifndef DASH_HDCHAIN_H
-#define DASH_HDCHAIN_H
+#ifndef GBX_HDCHAIN_H
+#define GBX_HDCHAIN_H
 
 #include "key.h"
 #include "sync.h"
@@ -149,4 +150,4 @@ public:
     std::string GetKeyPath() const;
 };
 
-#endif // DASH_HDCHAIN_H
+#endif // GBX_HDCHAIN_H
