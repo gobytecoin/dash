@@ -78,11 +78,11 @@ public:
         consensus.nMasternodePaymentsIncreaseBlock = 158000; // not used
         consensus.nMasternodePaymentsIncreasePeriod = 576*30; // not used
         consensus.nInstantSendKeepLock = 24;
-        consensus.nBudgetPaymentsStartBlock = 3000000000;
+        consensus.nBudgetPaymentsStartBlock = 190000;
         consensus.nBudgetPaymentsCycleBlocks = 17280; // ~(60*24*30)/2.5
         consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nBudgetProposalEstablishingTime = 60*60*24;
-        consensus.nSuperblockStartBlock = 3000000000;
+        consensus.nSuperblockStartBlock = 200000;
         consensus.nSuperblockCycle = 17280; // ~(60*24*30)/2.5
         consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
