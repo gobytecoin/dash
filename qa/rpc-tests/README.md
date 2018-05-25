@@ -105,4 +105,3 @@ Each ```TestInstance``` consists of:
 
 * For examples of tests written in this framework, see
   ```invalidblockrequest.py``` and ```p2p-fullblocktest.py```.
-

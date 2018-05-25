@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>org.gobyte.gobyted</string>
+	<string>network.gobyte.gobyted</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/bin/gobyted</string>

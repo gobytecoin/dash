@@ -19,4 +19,3 @@ l1 = set([ re.search(r'qt_(.*).qm', f).group(1) for f in glob.glob(os.path.join(
 l2 = set([ re.search(r'gobyte_(.*).qm', f).group(1) for f in glob.glob(os.path.join(d2, 'gobyte_*.qm')) ])
 
 print ",".join(sorted(l1.intersection(l2)))
-

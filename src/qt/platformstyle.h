@@ -52,4 +52,3 @@ private:
 };
 
 #endif // BITCOIN_QT_PLATFORMSTYLE_H
-

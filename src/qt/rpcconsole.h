@@ -37,6 +37,11 @@ public:
     explicit RPCConsole(const PlatformStyle *platformStyle, QWidget *parent);
     ~RPCConsole();
 
+    static bool RPCParseCommandLine(std::string &strResult, const std::string &strCommand, bool fExecute, std::string * const pstrFilteredOut = NULL);
+    static bool RPCExecuteCommandLine(std::string &strResult, const std::string &strCommand, std::string * const pstrFilteredOut = NULL) {
+        return RPCParseCommandLine(strResult, strCommand, true, pstrFilteredOut);
+    }
+
     void setClientModel(ClientModel *model);
 
     enum MessageClass {
@@ -85,7 +90,7 @@ public Q_SLOTS:
     void fontBigger();
     void fontSmaller();
     void setFontSize(int newSize);
-    
+
     /** Wallet repair options */
     void walletSalvage();
     void walletRescan();
@@ -93,7 +98,7 @@ public Q_SLOTS:
     void walletZaptxes2();
     void walletUpgrade();
     void walletReindex();
-    
+
     /** Append the message to the message widget */
     void message(int category, const QString &message, bool html = false);
     /** Set number of connections shown in the UI */
@@ -155,6 +160,7 @@ private:
     ClientModel *clientModel;
     QStringList history;
     int historyPtr;
+    QString cmdBeforeBrowsing;
     QList<NodeId> cachedNodeids;
     const PlatformStyle *platformStyle;
     RPCTimerInterface *rpcTimerInterface;

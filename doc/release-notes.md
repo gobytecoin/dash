@@ -1,5 +1,5 @@
-GoByte Core version 0.12.2
-========================
+GoByte Core version 0.12.2.3
+==========================
 
 Release is now available from:
 
@@ -26,14 +26,14 @@ Downgrade warning
 -----------------
 ### Downgrade to a version < 0.12.2
 
-Because release 0.12.2 includes DIP0001 (2 MB block size hardfork) plus
-a transaction fee reduction and a fix for masternode rank calculation algo
-(which activation also depends on DIP0001) this release will not be
-backwards compatible after DIP0001 lock in/activation happens.
+### Downgrade to a version < 0.12.2.2
 
-This does not affect wallet forward or backward compatibility.
+Because release 0.12.2.2 included the [per-UTXO fix](release-notes/gobyte/release-notes-0.12.2.2.md#per-utxo-fix)
+which changed the structure of the internal database, you will have to reindex
+the database if you decide to use any pre-0.12.2.2 version.
 
-Notable changes
+Wallet forward or backward compatibility was not affected.
+
 ===============
 
 DIP0001
@@ -77,29 +77,41 @@ Command-line options
 New: `assumevalid`, `blocksonly, `reindex-chainstate`
 
 Experimental: `usehd`, `mnemonic`, `mnemonicpassphrase`, `hdseed`
+=======
+### Downgrade to 0.12.2.2
+
+Downgrading to 0.12.2.2 does not require any additional actions, should be
+fully compatible.
+
+Notable changes
+===============
+
+InstantSend fixes
+-----------------
+
+Coin selection could work slightly incorrect in some edge cases which could
+lead to a creation of an InstantSend transaction which only the local wallet
+would consider to be a good candidate for a lock. Such txes was not locked by
+the network but they were creating a confusion on the user side giving an
+impression of a slightly higher InstantSend failure rate.
+
+Another issue fixed in this release is that masternodes could vote for a tx
+that is not going to be accepted to the mempool sometimes. This could lead to
+a situation when user funds would be locked even though InstantSend transaction
+would not show up on the receiving side.
+
+Fix -liquidityprovider option
+-----------------------------
+
+Turned out that liquidityprovider mixing mode practically stopped working after
+recent improvements in the PrivateSend mixing algorithm due to a suboptimal
+looping which occurs only in this mode (due to a huge number of rounds). To fix
+the issue a small part of the mixing algorithm was reverted to a pre-0.12.2 one
+for this mode only. Regular users were not affected by the issue in any way and
+will continue to use the improved one just like before.
 
 See `Help -> Command-line options` in Qt wallet or `gobyted --help` for more info.
 
-PrivateSend improvements
-------------------------
-
-Algorithm for selecting inputs was slightly changed. This should allow user to get some mixed funds much faster.
-
-Lots of backports, refactoring and bug fixes
---------------------------------------------
-
-We backported some performance improvements from Bitcoin Core and aligned our codebase with their source a little bit better. We still do not have all the improvements so this work is going to be continued in next releases.
-
-A lot of refactoring and other fixes should make code more reliable and easier to review now.
-
-Experimental HD wallet
-----------------------
-
-This release includes experimental implementation of BIP39/BIP44 compatible HD wallet. Wallet type (HD or non-HD) is selected when wallet is created via `usehd` command-line option, default is `0` which means that a regular non-deterministic wallet is going to be used. If you decide to use HD wallet, you can also specify BIP39 mnemonic and mnemonic passphrase (see `mnemonic` and `mnemonicpassphrase` command-line options) but you can do so only on initial wallet creation and can't change these afterwards. If you don't specify them, mnemonic is going to be generated randomly and mnemonic passphrase is going to be just a blank string.
-
-**WARNING:** The way it's currently implemented is NOT safe and is NOT recommended to use on mainnet. Wallet is created unencrypted with mnemonic stored inside, so even if you encrypt it later there will be a short period of time when mnemonic is stored in plain text. This issue will be addressed in future releases.
-
-0.12.2 Change log
 =================
 
 ### Backports:
@@ -341,11 +353,77 @@ This release includes experimental implementation of BIP39/BIP44 compatible HD w
 - [`46342b2e8`] update nCollateralMinConfBlockHash for local (hot) masternode on mn start (#1689)
 - [`f5286b179`] Fix/optimize images (#1688)
 - [`673e161d5`] fix trafficgraphdatatests for qt4 (#1699)
+=======
+This release also fixes a few crashes and compatibility issues.
+
+
+0.12.2.3 Change log
+===================
+
+See detailed [change log] below.
+
+### Backports:
+- [`068b20bc7`] Merge #8256: BUG: bitcoin-qt crash
+- [`f71ab1daf`] Merge #11847: Fixes compatibility with boost 1.66 (#1836)
+
+### PrivateSend:
+- [`fa5fc418a`] Fix -liquidityprovider option (#1829)
+- [`d261575b4`] Skip existing masternode conections on mixing (#1833)
+- [`21a10057d`] Protect CKeyHolderStorage via mutex (#1834)
+- [`476888683`] Avoid reference leakage in CKeyHolderStorage::AddKey (#1840)
+
+### InstantSend:
+- [`d6e2aa843`] Swap iterations and fUseInstantSend parameters in ApproximateBestSubset (#1819)
+- [`c9bafe154`] Vote on IS only if it was accepted to mempool (#1826)
+
+### Other:
+- [`ada41c3af`] Fix crash on exit when -createwalletbackups=0 (#1810)
+- [`63e0e30e3`] bump version to 0.12.2.3 (#1827)
+
+Credits
+=======
+
+Thanks to everyone who directly contributed to this release:
+
+- Alexander Block
+- lodgepole
+- UdjinM6
+
+As well as Bitcoin Core Developers and everyone that submitted issues,
+reviewed pull requests or helped translating on
+[Transifex](https://www.transifex.com/projects/p/gobyte/).
 
 
 Older releases
 ==============
 
-GoByte Core tree 0.12.1 was a fork of Dash Core tree 0.12.1.x
+GoByte was previously known as Darkcoin.
 
+Darkcoin tree 0.8.x was a fork of Litecoin tree 0.8, original name was XCoin
+which was first released on Jan/18/2014.
+
+Darkcoin tree 0.9.x was the open source implementation of masternodes based on
+the 0.8.x tree and was first released on Mar/13/2014.
+
+Darkcoin tree 0.10.x used to be the closed source implementation of Darksend
+which was released open source on Sep/25/2014.
+
+GoByte Core tree 0.11.x was a fork of Bitcoin Core tree 0.9,
+Darkcoin was rebranded to GoByte.
+
+GoByte Core tree 0.12.0.x was a fork of Bitcoin Core tree 0.10.
+
+GoByte Core tree 0.12.1.x was a fork of Bitcoin Core tree 0.12.
+
+These release are considered obsolete. Old release notes can be found here:
+
+- [v0.12.2.2](release-notes/gobyte/release-notes-0.12.2.2.md) released Dec/17/2017
+- [v0.12.2](release-notes/gobyte/release-notes-0.12.2.md) released Nov/08/2017
+- [v0.12.1](release-notes/gobyte/release-notes-0.12.1.md) released Feb/06/2017
+- [v0.12.0](release-notes/gobyte/release-notes-0.12.0.md) released Jun/15/2015
+- [v0.11.2](release-notes/gobyte/release-notes-0.11.2.md) released Mar/04/2015
+- [v0.11.1](release-notes/gobyte/release-notes-0.11.1.md) released Feb/10/2015
+- [v0.11.0](release-notes/gobyte/release-notes-0.11.0.md) released Jan/15/2015
+- [v0.10.x](release-notes/gobyte/release-notes-0.10.0.md) released Sep/25/2014
+- [v0.9.x](release-notes/gobyte/release-notes-0.9.0.md) released Mar/13/2014
 - [v0.12.1](release-notes/gobyte/release-notes-0.12.0.md) released Nov/17/2017

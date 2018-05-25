@@ -212,4 +212,3 @@ class CPubKey(bytes):
             return '%s(%s)' % (self.__class__.__name__, super(CPubKey, self).__repr__())
         else:
             return '%s(b%s)' % (self.__class__.__name__, super(CPubKey, self).__repr__())
-
